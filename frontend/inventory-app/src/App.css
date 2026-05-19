@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+@layer components {
+  .input-style {
+    @apply w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 transition-all text-sm;
+  }
+}
+
+@media print {
+  সাইডবার, নেভবার বা অন্য যেকোনো অপ্রয়োজনীয় অংশ প্রিন্টে হাইড করার জন্য
+  .sidebar, .nav-bar, .print-hidden {
+    display: none !important;
+  }
+  
+  /* মেইন কন্টেন্ট যেন পুরো জায়গা জুড়ে থাকে */
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  @page {
+    margin: 10mm; /* মার্জিন কমিয়ে দেওয়া */
+    size: auto;
+  }
+  body {
+    background-color: #fff !important;
+  }
+}
