@@ -17,11 +17,12 @@ const ShareIssueList = () => {
     totalQuantity: '', pricePerShare: '', totalValue: 0, notes: ''
   });
   const [editId, setEditId] = useState(null);
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
 
   const fetchIssues = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/api/shares', {
+      const res = await axios.get(`${SERVER_URL}/api/shares`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
       });
       if (res.data.success) setIssues(res.data.shares); // আপনার API রেসপন্স অনুযায়ী
@@ -34,7 +35,7 @@ const ShareIssueList = () => {
 
  //  প্রজেক্ট লিস্ট ফেচ করা (ড্রপডাউনের জন্য)
   const fetchProjects = async () => {
-    const res = await axios.get('http://localhost:3000/api/projects', {
+    const res = await axios.get(`${SERVER_URL}/api/projects`, {
       headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
     });
     if (res.data.success) setProjects(res.data.projects);
@@ -61,8 +62,9 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     try {
         const url = editId 
-            ? `http://localhost:3000/api/shares/update/${editId}` 
-            : 'http://localhost:3000/api/shares/create';
+            ? `${SERVER_URL}/api/shares/update/${editId}` 
+            : `${SERVER_URL}/api/shares/create`;
+            
         
         const response = await axios[editId ? 'put' : 'post'](url, formData, {
             headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
@@ -105,7 +107,7 @@ const handleSubmit = async (e) => {
             });
             if (result.isConfirmed) {
                 try {
-                    const response = await axios.delete(`http://localhost:3000/api/shares/delete/${id}`, {
+                    const response = await axios.delete(`${SERVER_URL}/api/shares/delete/${id}`, {
                         headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
                     });
                    if (response.data.success) {

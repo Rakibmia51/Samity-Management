@@ -14,6 +14,7 @@ const AddMemberModal = ({ isOpen, onClose, refreshData, editData }) => {
     };
 
     const [formData, setFormData] = useState(initialState);
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
     // যখন editData আসবে তখন ফর্ম ফিলআপ হবে
     useEffect(() => {
@@ -47,10 +48,10 @@ const AddMemberModal = ({ isOpen, onClose, refreshData, editData }) => {
                 const dataToSubmit = { ...formData };
                 if (!dataToSubmit.password) delete dataToSubmit.password; // পাসওয়ার্ড না দিলে আগেরটাই থাকবে
 
-                res = await axios.put(`http://localhost:3000/api/users/update/${editData._id}`, dataToSubmit, config);
+                res = await axios.put(`${SERVER_URL}/api/users/update/${editData._id}`, dataToSubmit, config);
             } else {
-                // নতুন অ্যাড করার সময় POST রিকোয়েস্ট
-                res = await axios.post('http://localhost:3000/api/users/add', formData, config);
+                // নতুন অ্যাড করার সময় POST রিকোয়েস্ট
+                res = await axios.post(`${SERVER_URL}/api/users/add`, formData, config);
             }
 
             if (res.data.success) {

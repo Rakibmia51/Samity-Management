@@ -8,6 +8,7 @@ const Login = () => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
     const navigate = useNavigate()
     const {login} = useAuth()
@@ -17,7 +18,7 @@ const Login = () => {
         setLoading(true)
         setError(null)
         try {
-            const response = await axios.post(`http://localhost:3000/api/auth/login`,
+            const response = await axios.post(`${SERVER_URL}/api/auth/login`,
                 {email, password}
             )
             if(response.data.success){

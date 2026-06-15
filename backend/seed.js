@@ -1,19 +1,23 @@
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
-require('dotenv').config()
 const User = require('./models/user')
 
-
-const seedAdmin = async ()=>{
+const seedAdmin = async () => {
     try {
-        await mongoose.connect(process.env.DBURL);
-        console.log('Database Connected')
+        // ১. আগে চেক করা হচ্ছে এই ইমেইলের কোনো এডমিন অলরেডি আছে কিনা
+        const adminExists = await User.findOne({ email: "admin1@example.com" })
+        
+        if (adminExists) {
+            console.log("ℹ️ Admin user already exists. Skipping seeding.")
+            return // অলরেডি থাকলে নতুন করে তৈরি না করে ফাংশন থেকে বের হয়ে যাবে
+        }
 
+        // ২. পাসওয়ার্ড হ্যাশ করা
         const password = await bcrypt.hash("123456", 10)
 
+        // ৩. নতুন এডমিন তৈরি
         await User.create({
             fullName: "admin-1",
-            mobile: "01712345678", // Matches your BD regex
+            mobile: "01712345678", 
             email: "admin1@example.com",
             nid: "1234567890123",
             dateOfBirth: new Date("1995-05-15"),
@@ -40,7 +44,7 @@ const seedAdmin = async ()=>{
             admissionFee: 500,
 
             // Security
-            password: password, // Remember to hash this before saving!
+            password: password, 
 
             // Files (URLs)
             memberPhoto: "",
@@ -50,12 +54,12 @@ const seedAdmin = async ()=>{
             remarks: "Verified by local board member."
         })
 
-        console.log("Admin User Created")
-        process.exit();
+        console.log("✅ Admin User Created Successfully")
     } catch (error) {
-        console.log(error);
-        process.exit(1)
+        console.error("❌ Error seeding admin user:", error)
+        // এখানে process.exit() দেওয়া যাবে না, দিলে মেইন সার্ভার বন্ধ হয়ে যাবে
     }
 }
 
-seedAdmin()
+// শুধু ফাংশনের রেফারেন্স এক্সপোর্ট করা হলো (ব্র্যাকেট ছাড়া)
+module.exports = seedAdmin

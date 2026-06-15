@@ -7,12 +7,13 @@ const ProfilePage = () => {
     const [passwords, setPasswords] = useState({ oldPassword: '', newPassword: '' });
     const [message, setMessage] = useState(null);
     const [loading, setLoading] = useState(false);
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
     // Fetch Profile Data
      const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('pos-token');
-                const res = await axios.get('http://localhost:3000/api/users/profile', {
+                const res = await axios.get(`${SERVER_URL}/api/users/profile`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUser(res.data.user);
@@ -32,7 +33,7 @@ const ProfilePage = () => {
         setMessage(null);
         try {
             const token = localStorage.getItem('pos-token');
-            const res = await axios.put('http://localhost:3000/api/users/change-password', passwords, {
+            const res = await axios.put(`${SERVER_URL}/api/users/change-password`, passwords, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setMessage({ type: 'success', text: res.data.message });

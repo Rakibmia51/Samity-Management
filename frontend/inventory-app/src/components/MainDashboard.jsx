@@ -6,11 +6,12 @@ import { Users, Briefcase, Wallet } from 'lucide-react';
 const MainDashboard = () => {
     const [member, setMember] = useState([])
     const [project, setProject] = useState([])
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
     const fetchData = async () =>{
         try {
             // Memebr Details Load
-            const memberRes = await axios.get(`http://localhost:3000/api/users`,{
+            const memberRes = await axios.get(`${SERVER_URL}/api/users`,{
                  headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
             })
             if(memberRes.data.success){
@@ -19,7 +20,7 @@ const MainDashboard = () => {
             }
 
             // Project Data Load
-            const projectRes = await axios.get(`http://localhost:3000/api/projects`,{
+            const projectRes = await axios.get(`${SERVER_URL}/api/projects`,{
                  headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
             })
             if(projectRes.data.success){

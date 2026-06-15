@@ -22,13 +22,14 @@ const ShareSales = () => {
     userId: '', quantity: '', availableShares: 0, pricePerShare: 0, totalAmount: 0,
     paymentMethod: 'Cash' // ডিফল্ট পেমেন্ট মেথড
   });
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   const fetchData = async () => {
     try {
       const config = { headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` } };
       const [salesRes, projRes] = await Promise.all([
-        axios.get('http://localhost:3000/api/share-sales', config),
-        axios.get('http://localhost:3000/api/projects', config) 
+        axios.get(`${SERVER_URL}/api/share-sales`, config),
+        axios.get(`${SERVER_URL}/api/projects`, config) 
       ]);
       setSales(salesRes.data.shareSales || []);
       setProjects(projRes.data.projects || []);
@@ -46,8 +47,9 @@ const ShareSales = () => {
     setFormData(prev => ({ ...prev, memberId: upperCode }));
     if (upperCode.length >= 5) {
       try {
-        const res = await axios.get(`http://localhost:3000/api/users/member-search/${upperCode}`, {
+        const res = await axios.get(`${SERVER_URL}/api/users/member-search/${upperCode}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
+          
         });
         if (res.data.success) {
           setFormData(prev => ({ ...prev, buyerName: res.data.member.fullName, userId: res.data.member._id }));
@@ -61,7 +63,7 @@ const ShareSales = () => {
   
   if (projId) {
     try {
-      const res = await axios.get(`http://localhost:3000/api/shares/latest-price/${projId}`, {
+      const res = await axios.get(`${SERVER_URL}/api/shares/latest-price/${projId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
       });
       
@@ -99,16 +101,16 @@ const ShareSales = () => {
     e.preventDefault();
     if(!formData.userId) return Swal.fire('Error', 'মেম্বার আইডি সঠিক নয়!', 'error');
     try {
-      const res = await axios.post('http://localhost:3000/api/share-sales/create', formData, {
+      const res = await axios.post(`${SERVER_URL}/api/share-sales/create`, formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
       });
       if (res.data.success) {
-        Swal.fire('Success', 'বিক্রি সম্পন্ন হয়েছে', 'success');
+        Swal.fire('Success', 'বিক্রি সম্পন্ন হয়েছে', 'success');
         setIsModalOpen(false);
         setFormData({ projectId: '', issueId: '', memberId: '', buyerName: '', userId: '', quantity: '', pricePerShare: 0, totalAmount: 0, availableShares: 0, paymentMethod: 'Cash' });
         fetchData();
       }
-    } catch (err) { Swal.fire('Error', 'সার্ভারে সমস্যা হয়েছে', 'error'); }
+    } catch (err) { Swal.fire('Error', 'সার্ভারে সমস্যা হয়েছে', 'error'); }
   };
 
   

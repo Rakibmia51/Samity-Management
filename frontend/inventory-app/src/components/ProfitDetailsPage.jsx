@@ -13,17 +13,18 @@ const ProfitDetailsPage = () => {
     const [loading, setLoading] = useState(true);
     const [project, setProjects] = useState([]);
     const [isSaving, setIsSaving] = useState(false);
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`http://localhost:3000/api/profit/details/${id}`);
+                const res = await axios.get(`${SERVER_URL}/api/profit/details/${id}`);
                 setRecord(res.data.data);
                 // console.log(res.data.data)
-                const invRes = await axios.get(`http://localhost:3000/api/shares/project/${res.data.data.projectId._id}`);
+                const invRes = await axios.get(`${SERVER_URL}/api/shares/project/${res.data.data.projectId._id}`);
                 setInvestors(invRes.data);
                 // console.log(invRes.data)
-                const projectDetails = await axios(`http://localhost:3000/api/projects/details/${res.data.data.projectId._id}`);
+                const projectDetails = await axios.get(`${SERVER_URL}/api/projects/details/${res.data.data.projectId._id}`);
                 setProjects(projectDetails.data.data)
                 // console.log(projectDetails.data.data.shareDetails)
                 setLoading(false);
@@ -90,7 +91,7 @@ const ProfitDetailsPage = () => {
                 }));
 
                 // ২. ব্যাকএন্ডে API Call (এন্ডপয়েন্ট আপনার রুট অনুযায়ী চেক করে নিন)
-                const response = await axios.post('http://localhost:3000/api/payouts/distribute', {
+                const response = await axios.post(`${SERVER_URL}/api/payouts/distribute`, {
                     profitRecordId: record._id,
                     payouts: payoutData
                 });

@@ -15,16 +15,17 @@ const GlobalInvestmentTable = () => {
   const [formData, setFormData] = useState({
     projectId: '', endpointName: '', type: 'Income', amount: '', date: new Date().toISOString().split('T')[0]
   });
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/endpoints');
+      const response = await axios.get(`${SERVER_URL}/api/endpoints`);
       if (response.data.success) {
         setAllData(response.data.data);
         setOverallTotals(response.data.overallTotals);
       }
       // প্রজেক্ট লিস্ট লোড করা
-      const projRes = await axios.get('http://localhost:3000/api/projects');
+      const projRes = await axios.get(`${SERVER_URL}/api/projects`);
       setProjects(projRes.data.data);
     } catch (error) {
       console.error("Data load error:", error);
@@ -38,7 +39,7 @@ const GlobalInvestmentTable = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/api/endpoints', formData);
+      await axios.post(`${SERVER_URL}/api/endpoints`, formData);
       setIsModalOpen(false); // ফর্ম বন্ধ করা
       fetchData(); // টেবিল ডাটা রিফ্রেশ করা
       setFormData({ projectId: '', endpointName: '', type: 'Income', amount: '', date: new Date().toISOString().split('T')[0] });

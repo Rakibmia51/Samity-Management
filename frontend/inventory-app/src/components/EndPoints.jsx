@@ -21,17 +21,18 @@ const GlobalInvestmentTable = () => {
 // Viwe Details
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [viewEndPoint, setViewEndPoint] = useState(null);
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/endpoints');
+      const response = await axios.get(`${SERVER_URL}/api/endpoints`);
       if (response.data.success) {
         setAllData(response.data.data);
         setOverallTotals(response.data.overallTotals);
       }
 
     // প্রজেক্ট লিস্ট লোড করা
-    const projRes = await axios.get('http://localhost:3000/api/projects');
+    const projRes = await axios.get(`${SERVER_URL}/api/projects`);
     setProjects(projRes.data.projects);
    
     } catch (error) {
@@ -48,7 +49,7 @@ const GlobalInvestmentTable = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res = await axios.post('http://localhost:3000/api/endpoints/add', formData, {
+        const res = await axios.post(`${SERVER_URL}/api/endpoints/add`, formData, {
              headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
         });
         if(res.data.success){
@@ -71,7 +72,7 @@ const GlobalInvestmentTable = () => {
     });
     if(result.isConfirmed){
             try {
-            const res = await axios.delete(`http://localhost:3000/api/endpoints/delete/${id}`, {
+            const res = await axios.delete(`${SERVER_URL}/api/endpoints/delete/${id}`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
             });
             if(res.data.success){

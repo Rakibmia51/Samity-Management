@@ -10,6 +10,7 @@ const MyProfit = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [payouts, setPayouts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,12 +18,12 @@ const MyProfit = () => {
         const headers = { Authorization: `Bearer ${localStorage.getItem("pos-token")}` };
         
         // ১. ইউজার প্রোফাইল আনা
-        const resUser = await axios.get('http://localhost:3000/api/users/profile', { headers });
+        const resUser = await axios.get(`${SERVER_URL}/api/users/profile`, { headers });
         const myId = resUser.data.user._id;
         setUser(resUser.data.user);
 
         // ২. পে-আউট ডাটা আনা এবং ফিল্টার করা
-        const payoutRes = await axios.get(`http://localhost:3000/api/payouts`, { headers });
+        const payoutRes = await axios.get(`${SERVER_URL}/api/payouts`, { headers });
         if (payoutRes.data.success) {
           const myPayouts = payoutRes.data.data.filter(item => 
             (item.memberId?._id || item.memberId) === myId

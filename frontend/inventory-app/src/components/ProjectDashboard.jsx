@@ -25,11 +25,12 @@ const ProjectList = () => {
   const [editId, setEditId] = useState(null); // Track project being edited
   const [shareSales, setShareSales] = useState([]);
   const [endPoint, setEndPoint] = useState([]);
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   const fetchProjects = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3000/api/projects', {
+      const response = await axios.get(`${SERVER_URL}/api/projects`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
       });
       if (response.data.success) {
@@ -56,8 +57,8 @@ const ProjectList = () => {
     e.preventDefault();
     try {
       const url = editId 
-        ? `http://localhost:3000/api/projects/update/${editId}` 
-        : 'http://localhost:3000/api/projects/create';
+        ? `${SERVER_URL}/api/projects/update/${editId}` 
+        : `${SERVER_URL}/api/projects/create`;
       
       const method = editId ? 'put' : 'post';
 
@@ -96,11 +97,12 @@ const ProjectList = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await axios.delete(`http://localhost:3000/api/projects/delete/${id}`, {
+        const response = await axios.delete(`${SERVER_URL}/api/projects/delete/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
+          
         });
         if (response.data.success) {
-          // ডিলিট সফল হলে স্টেট থেকে ওই প্রজেক্টটি ফিল্টার করে সরিয়ে ফেলুন
+          // ডিলিট সফল হলে স্টেট থেকে ওই প্রজেক্টটি ফিল্টার করে সরিয়ে ফেলুন
           setProjects(projects.filter(p => p._id !== id));
           Swal.fire('Deleted!', 'Project has been removed.', 'success');
         }

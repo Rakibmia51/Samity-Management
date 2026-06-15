@@ -7,19 +7,21 @@ const MyLedger = () => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
+  
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const headers = { Authorization: `Bearer ${localStorage.getItem("pos-token")}` };
-        const resUser = await axios.get('http://localhost:3000/api/users/profile', { headers });
+        const resUser = await axios.get(`${SERVER_URL}/api/users/profile`, { headers });
         const myId = resUser.data.user._id;
         setUser(resUser.data.user);
 
         // ১. প্রফিট এবং শেয়ার কেনা (Sales) উভয় ডাটা আনা
         const [resPayouts, resSales] = await Promise.all([
-          axios.get(`http://localhost:3000/api/payouts`, { headers }),
-          axios.get(`http://localhost:3000/api/share-sales`, { headers })
+          axios.get(`${SERVER_URL}/api/payouts`, { headers }),
+          axios.get(`${SERVER_URL}/api/share-sales`, { headers })
         ]);
 
         // ২. ডাটা ফরম্যাট করা (Ledger Entry তৈরি করা)

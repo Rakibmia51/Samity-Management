@@ -7,11 +7,12 @@ const ProjectDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [project, setProject] = useState(null);
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   useEffect(() => {
     const fetchProject = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/projects/details/${id}`, {
+        const res = await axios.get(`${SERVER_URL}/api/projects/details/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
         });
         setProject(res.data.data);

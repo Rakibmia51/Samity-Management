@@ -4,11 +4,12 @@ import { Users, Briefcase, Wallet, PieChart, TrendingUp } from 'lucide-react';
 
 const MainDashboard = () => {
     const [data, setData] = useState(null);
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
     const fetchData = async () => {
             try {
             // মেম্বার নিজের ডাটা লোড করছে
-            const res = await axios.get(`http://localhost:3000/api/memberSide/my-stats`, {
+            const res = await axios.get(`${SERVER_URL}/api/memberSide/my-stats`, {
                 headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
             });
             

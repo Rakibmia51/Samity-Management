@@ -4,6 +4,7 @@ import { useReactToPrint } from 'react-to-print'
 
 const EndPointViewDetails = ({isOpen, onClose, endPoint}) => {
     const componentRef = useRef()
+
     
     // টাইপ চেক করা (Income নাকি Expense)
     const isIncome = endPoint?.type?.toLowerCase() === 'income';

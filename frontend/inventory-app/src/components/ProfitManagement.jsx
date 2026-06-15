@@ -18,6 +18,7 @@ const ProfitManagement = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [investors, setInvestors] = useState([]);
     const navigate = useNavigate();
+    const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
 
     // ১. ইনিশিয়াল ডেটা লোড (Projects & History)
@@ -28,8 +29,8 @@ const ProfitManagement = () => {
 
   const fetchProjects = async () => {
         try {
-            const res = await axios.get('http://localhost:3000/api/projects');
-            // যদি রেসপন্স সরাসরি অ্যারে না হয়ে অবজেক্ট হয়, তবে res.data.data অথবা res.data চেক করবে
+            const res = await axios.get(`${SERVER_URL}/api/projects`);
+            // যদি রেসপন্স সরাসরি অ্যারে না হয়ে অবজেক্ট হয়, তবে res.data.data অথবা res.data চেক করবে
             const projectData = Array.isArray(res.data.projects) ? res.data.projects : res.data.data;
             setProjects(projectData || []); 
             // console.log(projectData)
@@ -41,8 +42,8 @@ const ProfitManagement = () => {
 
     const fetchHistory = async () => {
         try {
-            const res = await axios.get('http://localhost:3000/api/profit/history');
-            // আপনার ব্যাকএন্ড অনুযায়ী res.data.data চেক করা হচ্ছে
+            const res = await axios.get(`${SERVER_URL}/api/profit/history`);
+            // আপনার ব্যাকএন্ড অনুযায়ী res.data.data চেক করা হচ্ছে
             const historyData = res.data.data || res.data;
             setHistory(Array.isArray(historyData) ? historyData : []);
             console.log(res.data.data)
@@ -57,7 +58,7 @@ const ProfitManagement = () => {
         if (!selectedProject) return toast.error("Please select a project");
         setLoading(true);
         try {
-            const res = await axios.get(`http://localhost:3000/api/profit/project-summary/${selectedProject}?date=${selectedDate}`);
+            const res = await axios.get(`${SERVER_URL}/api/profit/project-summary/${selectedProject}?date=${selectedDate}`);
             setSummary(res.data.data);
             // console.log(res.data.data)
         } catch (err) {
@@ -88,7 +89,7 @@ const ProfitManagement = () => {
                 notes: "Monthly calculation"
             };
            // ব্যাকএন্ডে রিকোয়েস্ট পাঠানো
-            const res = await axios.post('http://localhost:3000/api/profit/save', payload);
+            const res = await axios.post(`${SERVER_URL}/api/profit/save`, payload);
         
             if (res.data.success) {
                 // সফল হলে সুন্দর অ্যালার্ট
@@ -131,7 +132,7 @@ const ProfitManagement = () => {
 
     if (result.isConfirmed) {
         try {
-            const response = await axios.put(`http://localhost:3000/api/profit/status/${id}`, {
+            const response = await axios.put(`${SERVER_URL}/api/profit/status/${id}`, {
                 status: nextStatus
             });
             if (response.data.success) {
@@ -159,10 +160,11 @@ const ProfitManagement = () => {
         if (result.isConfirmed) {
             try {
                 // ১. এই প্রজেক্টের সব শেয়ার হোল্ডারদের ডাটা নিয়ে আসা
-                const invRes = await axios.get(`http://localhost:3000/api/shares/project/${row.projectId?._id}`);
+                const invRes = await axios.get(`${SERVER_URL}/api/shares/project/${row.projectId?._id}`);
+                
                 const allInvestors = invRes.data;
 
-                // ২. গ্রুপিং লজিক (Details Page থেকে নেওয়া)
+                // ২. গ্রুপিং লজিক (Details Page থেকে নেওয়া)
                 const groupedInvestors = allInvestors.reduce((acc, current) => {
                     const userId = current.userId?._id;
                     if (!acc[userId]) {
@@ -199,10 +201,11 @@ const ProfitManagement = () => {
                 }));
 
                 // ৫. ব্যাকএন্ডে API Call
-                const response = await axios.post('http://localhost:3000/api/payouts/distribute', {
+                const response = await axios.post(`${SERVER_URL}/api/payouts/distribute`, {
                     profitRecordId: row._id,
                     payouts: payoutData
                 });
+
 
                 if (response.data.success) {
                     Swal.fire('Saved!', 'Member profits recorded successfully.', 'success');

@@ -8,12 +8,12 @@ const MemberShares = () => {
   const [user, setUser] = useState(null);
   const [sales, setSales] = useState(null);
   const [projectShares, setProjectShares] = useState({});
-
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000'; 
 
   useEffect(() => {
     const fetchPortfolio = async () => {
       try {
-        const res = await axios.get(`http://localhost:3000/api/memberSide/my-stats`, {
+        const res = await axios.get(`${SERVER_URL}/api/memberSide/my-stats`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
         });
         if (res.data.success) {
@@ -21,13 +21,13 @@ const MemberShares = () => {
         }
 
         const token = localStorage.getItem('pos-token');
-        const resUser = await axios.get('http://localhost:3000/api/users/profile', {
+        const resUser = await axios.get(`${SERVER_URL}/api/users/profile`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setUser(resUser.data.user);
         // console.log(resUser.data.user)
 
-        const resShareSales = await axios.get(`http://localhost:3000/api/share-sales`, {
+        const resShareSales = await axios.get(`${SERVER_URL}/api/share-sales`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
         });
         if (resShareSales.data.success) {
@@ -35,7 +35,7 @@ const MemberShares = () => {
           console.log(resShareSales.data.shareSales)
         }
          // ২. নতুন: প্রোজেক্টের টোটাল শেয়ার ডাটা ফেচ করা
-        const resTotalShares = await axios.get(`http://localhost:3000/api/shares`, {
+        const resTotalShares = await axios.get(`${SERVER_URL}/api/shares`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("pos-token")}` }
         });
         // প্রজেক্ট আইডি অনুযায়ী টোটাল শেয়ার ম্যাপ করা
