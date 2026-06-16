@@ -1,7 +1,7 @@
 // For Member Frontend
 const ShareSale = require('../models/shareSale');
 const ShareIssue = require('../models/shareIssue');
-const ProfitPayout = require("../models/ProfitPayout"); // মডেলটি ইমপোর্ট নিশ্চিত করুন
+const ProfitPayout = require("../models/profitPayout"); // মডেলটি ইমপোর্ট নিশ্চিত করুন
 
 const getMyShareStats = async (req, res) => {
     try {

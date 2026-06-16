@@ -1,6 +1,6 @@
 const InvestmentEndpoint = require('../models/endPoint');
 const Project = require('../models/project');
-const ProfitRecord = require('../models/ProfitRecord');
+const ProfitRecord = require('../models/profitRecord');
 const ShareIssue = require('../models/shareIssue');
 const shareSale = require('../models/shareSale');
 

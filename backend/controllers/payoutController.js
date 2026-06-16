@@ -1,5 +1,5 @@
-const ProfitPayout = require("../models/ProfitPayout");
-const profitRecord = require("../models/ProfitRecord");
+const ProfitPayout = require("../models/profitPayout");
+const profitRecord = require("../models/profitRecord");
 
 
 const distributeMemberProfits = async (req, res) => {
