@@ -1,5 +1,5 @@
-const ProfitPayout = require("../models/profitPayout");
-const ProfitRecord = require("../models/profitRecord");
+const profitPayout = require("../models/profitPayout");
+const profitRecord = require("../models/profitRecord");
 
 
 const distributeMemberProfits = async (req, res) => {
@@ -7,16 +7,16 @@ const distributeMemberProfits = async (req, res) => {
         const { payouts, profitRecordId } = req.body;
 
         // ১. চেক করা যে এই ক্যালকুলেশনটি আগে ডিস্ট্রিবিউট হয়েছে কিনা
-        const existing = await ProfitPayout.findOne({ profitRecordId });
+        const existing = await profitPayout.findOne({ profitRecordId });
         if (existing) {
             return res.status(400).json({ message: "Profit already distributed for this record!" });
         }
 
         // ২. Bulk Insert (একসাথে সবার ডাটা সেভ)
-        await ProfitPayout.insertMany(payouts);
+        await profitPayout.insertMany(payouts);
 
         // ৩. মেইন প্রফিট রেকর্ডের স্ট্যাটাস আপডেট
-        await ProfitRecord.findByIdAndUpdate(profitRecordId, { status: 'Distributed' });
+        await profitRecord.findByIdAndUpdate(profitRecordId, { status: 'Distributed' });
 
         res.status(200).json({ success: true, message: "Profits distributed successfully!" });
     } catch (error) {
@@ -26,7 +26,7 @@ const distributeMemberProfits = async (req, res) => {
 
 const getDistributeMemberProfits = async (req, res) =>{
     try {
-        const ProfitPayout = await ProfitPayout.find()
+        const profitPayout = await profitPayout.find()
             .populate('projectId', 'projectName')
             .sort({createdAt: -1})
 
