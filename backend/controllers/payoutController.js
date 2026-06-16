@@ -1,5 +1,5 @@
 const ProfitPayout = require("../models/profitPayout");
-const profitRecord = require("../models/profitRecord");
+const ProfitRecord = require("../models/profitRecord");
 
 
 const distributeMemberProfits = async (req, res) => {
@@ -16,7 +16,7 @@ const distributeMemberProfits = async (req, res) => {
         await ProfitPayout.insertMany(payouts);
 
         // ৩. মেইন প্রফিট রেকর্ডের স্ট্যাটাস আপডেট
-        await profitRecord.findByIdAndUpdate(profitRecordId, { status: 'Distributed' });
+        await ProfitRecord.findByIdAndUpdate(profitRecordId, { status: 'Distributed' });
 
         res.status(200).json({ success: true, message: "Profits distributed successfully!" });
     } catch (error) {
@@ -26,7 +26,7 @@ const distributeMemberProfits = async (req, res) => {
 
 const getDistributeMemberProfits = async (req, res) =>{
     try {
-        const profitPayout = await ProfitPayout.find()
+        const ProfitPayout = await ProfitPayout.find()
             .populate('projectId', 'projectName')
             .sort({createdAt: -1})
 
